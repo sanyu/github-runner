@@ -1,0 +1,40 @@
+name: build-image
+
+# Build the shared self-hosted runner image on a GitHub-hosted (native amd64)
+# runner and push it to GHCR. This is an OCCASIONAL job (Dockerfile / base-runner
+# version changes), not per-PR CI — so the minutes cost is negligible, and building
+# natively here avoids the qemu-user segfault that breaks the Nix install when
+# cross-building linux/amd64 on an arm host.
+on:
+  push:
+    branches: [main]
+    paths:
+      - Dockerfile
+      - .github/workflows/build.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/github-runner:2.336.0-noble
+            ghcr.io/${{ github.repository_owner }}/github-runner:latest
