@@ -13,7 +13,7 @@
 # Generic on purpose: bakes Nix + devbox only, not any project's packages. Each repo's
 # CI runs `devbox run` against its OWN checked-out devbox.json. A repo that wants a
 # pre-warmed store can layer its own image: FROM this + COPY devbox.* + RUN devbox install.
-FROM myoung34/github-runner:2.336.0-ubuntu-noble
+FROM myoung34/github-runner:2.338.2-ubuntu-noble
 
 USER root
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]

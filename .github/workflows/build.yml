@@ -36,5 +36,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/github-runner:2.336.0-noble
+            ghcr.io/${{ github.repository_owner }}/github-runner:2.338.2-noble
             ghcr.io/${{ github.repository_owner }}/github-runner:latest
